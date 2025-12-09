@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayan Hacks - Professional Background Removal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f3ff;
+            --secondary: #ff00ff;
+            --accent: #00ff9d;
+            --dark: #0a0a1a;
+            --darker: #050510;
+            --light: #f0f8ff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Blobs */
+        .background-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            filter: blur(60px);
+            opacity: 0.6;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .blob:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            top: -200px;
+            left: -100px;
+            background: var(--primary);
+            animation-delay: 0s;
+        }
+
+        .blob:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            top: 40%;
+            right: -100px;
+            background: var(--secondary);
+            animation-delay: 5s;
+        }
+
+        .blob:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            bottom: -100px;
+            left: 30%;
+            background: var(--accent);
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -50px) scale(1.1); }
+            50% { transform: translate(-30px, 30px) scale(0.9); }
+            75% { transform: translate(-50px, -30px) scale(1.05); }
+        }
+
+        /* Header & Logo */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(10, 10, 26, 0.7);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 24px;
+            color: var(--dark);
+            box-shadow: 0 0 20px var(--primary);
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: rotate(15deg) scale(1.1);
+            box-shadow: 0 0 30px var(--primary);
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+
+        /* Welcome Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 16, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .welcome-modal {
+            background: rgba(20, 20, 40, 0.9);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.2),
+                        inset 0 0 20px rgba(0, 243, 255, 0.1);
+            animation: modalAppear 0.6s ease-out;
+        }
+
+        @keyframes modalAppear {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title {
+            font-size: 36px;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 900;
+        }
+
+        .modal-subtitle {
+            font-size: 18px;
+            color: rgba(240, 248, 255, 0.8);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn-get-start {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .btn-get-start:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.8);
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            padding: 30px 5%;
+            gap: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+
+        /* Left Panel - Upload & Preview */
+        .left-panel {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .upload-area {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 40px;
+            border: 2px dashed var(--glass-border);
+            text-align: center;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .upload-icon {
+            font-size: 70px;
+            margin-bottom: 20px;
+            color: var(--primary);
+            filter: drop-shadow(0 0 10px var(--primary));
+        }
+
+        .upload-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+
+        .upload-subtitle {
+            color: rgba(240, 248, 255, 0.7);
+            margin-bottom: 25px;
+        }
+
+        .btn-upload {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: var(--dark);
+            border: none;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 15px;
+        }
+
+        .btn-upload:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-container {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+
+        .preview-container:hover {
+            border-color: rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .image-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .image-preview {
+                flex-direction: row;
+                justify-content: space-around;
+            }
+        }
+
+        .preview-box {
+            flex: 1;
+            text-align: center;
+        }
+
+        .preview-label {
+            font-size: 16px;
+            color: rgba(240, 248, 255, 0.8);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            max-width: 300px;
+            height: 250px;
+            background: rgba(30, 30, 60, 0.5);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--glass-border);
+            margin: 0 auto;
+            transition: var(--transition);
+        }
+
+        .image-placeholder:hover {
+            border-color: var(--primary);
+        }
+
+        .image-placeholder i {
+            font-size: 50px;
+            color: rgba(240, 248, 255, 0.2);
+            margin-bottom: 15px;
+        }
+
+        .preview-image {
+            width: 100%;
+            max-width: 300px;
+            height: 250px;
+            object-fit: contain;
+            background: rgba(30, 30, 60, 0.5);
+            border-radius: 15px;
+            border: 2px solid var(--glass-border);
+            transition: var(--transition);
+        }
+
+        .preview-image:hover {
+            transform: scale(1.02);
+            border-color: var(--primary);
+        }
+
+        /* Right Panel - History */
+        .right-panel {
+            flex: 0.8;
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .right-panel:hover {
+            border-color: rgba(0, 243, 255, 0.3);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .btn-clear-history {
+            background: rgba(255, 0, 102, 0.2);
+            color: #ff0066;
+            border: 1px solid rgba(255, 0, 102, 0.5);
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .btn-clear-history:hover {
+            background: rgba(255, 0, 102, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .history-item {
+            background: rgba(30, 30, 60, 0.5);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .history-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.2);
+        }
+
+        .history-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid var(--glass-border);
+        }
+
+        .history-info {
+            flex: 1;
+        }
+
+        .history-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--light);
+        }
+
+        .history-time {
+            font-size: 12px;
+            color: rgba(240, 248, 255, 0.6);
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .history-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .history-btn:hover {
+            background: rgba(0, 243, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(240, 248, 255, 0.5);
+        }
+
+        .empty-history i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: rgba(240, 248, 255, 0.2);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(0, 243, 255, 0.1);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Processed Card */
+        .processed-card {
+            background: rgba(20, 20, 40, 0.9);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
+            display: none;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            color: var(--light);
+        }
+
+        .image-name-input {
+            background: transparent;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            color: var(--light);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            width: 200px;
+            transition: var(--transition);
+        }
+
+        .image-name-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-download {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: var(--dark);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.4);
+        }
+
+        .btn-share {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-share:hover {
+            background: rgba(0, 243, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .toast {
+            background: rgba(20, 20, 40, 0.95);
+            border-left: 5px solid var(--primary);
+            border-radius: 10px;
+            padding: 16px 24px;
+            margin-top: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 350px;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            border-left-color: #ff0066;
+        }
+
+        .toast.success {
+            border-left-color: var(--accent);
+        }
+
+        .toast i {
+            font-size: 20px;
+        }
+
+        .toast.success i {
+            color: var(--accent);
+        }
+
+        .toast.error i {
+            color: #ff0066;
+        }
+
+        .toast.info i {
+            color: var(--primary);
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 15px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(240, 248, 255, 0.6);
+            font-size: 14px;
+            border-top: 1px solid rgba(0, 243, 255, 0.1);
+            margin-top: 40px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .upload-area {
+                padding: 30px 20px;
+            }
+            
+            .preview-container {
+                padding: 20px;
+            }
+            
+            .right-panel {
+                padding: 20px;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .card-actions {
+                flex-direction: column;
+            }
+            
+            .btn-download, .btn-share {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .toast-container {
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+            }
+            
+            .toast {
+                max-width: 100%;
+            }
+        }
+
+        /* Accessibility */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus states for keyboard navigation */
+        button:focus, input:focus, .history-item:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(10, 10, 26, 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--primary), var(--secondary));
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(var(--accent), var(--primary));
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Blobs -->
+    <div class="background-blobs">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+
+    <!-- Header with Logo -->
+    <header class="header">
+        <div class="logo-badge">
+            <div class="logo">AH</div>
+            <div class="logo-text">Ayan Hacks</div>
+        </div>
+    </header>
+
+    <!-- Welcome Modal -->
+    <div class="modal-overlay" id="welcomeModal">
+        <div class="welcome-modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDescription">
+            <h1 id="modalTitle" class="modal-title">Welcome To Ayan Hacks</h1>
+            <p id="modalDescription" class="modal-subtitle">
+                Professional background removal tool powered by AI. Upload any image and get a transparent background in seconds.
+            </p>
+            <button class="btn-get-start" id="getStartBtn" aria-label="Get started with Ayan Hacks">
+                Get Started
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container" id="mainContainer" style="display: none;">
+        <!-- Left Panel - Upload & Preview -->
+        <div class="left-panel">
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h2 class="upload-title">Drag & Drop Your Image</h2>
+                <p class="upload-subtitle">Supports JPG, PNG, WEBP up to 15MB</p>
+                <input type="file" id="fileInput" class="file-input" accept=".jpg,.jpeg,.png,.webp">
+                <button class="btn-upload" id="uploadBtn" aria-label="Upload an image">
+                    <i class="fas fa-folder-open"></i> Choose File
+                </button>
+                <p class="visually-hidden" id="uploadInstructions">
+                    You can either click the choose file button or drag and drop an image file directly onto this area.
+                </p>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p>Removing background... Please wait</p>
+            </div>
+
+            <!-- Preview Container -->
+            <div class="preview-container">
+                <h3 class="section-title">
+                    <i class="fas fa-images"></i> Preview
+                </h3>
+                <div class="image-preview">
+                    <div class="preview-box">
+                        <span class="preview-label">Original Image</span>
+                        <div class="image-placeholder" id="originalPlaceholder">
+                            <i class="fas fa-image"></i>
+                            <p>No image selected</p>
+                        </div>
+                        <img id="originalPreview" class="preview-image" style="display: none;" alt="Original image preview">
+                    </div>
+                    <div class="preview-box">
+                        <span class="preview-label">Processed Image</span>
+                        <div class="image-placeholder" id="processedPlaceholder">
+                            <i class="fas fa-magic"></i>
+                            <p>Background removed image will appear here</p>
+                        </div>
+                        <img id="processedPreview" class="preview-image" style="display: none;" alt="Background removed image preview">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Processed Card -->
+            <div class="processed-card" id="processedCard">
+                <div class="card-header">
+                    <h3 class="card-title">Your Processed Image</h3>
+                    <input type="text" class="image-name-input" id="imageNameInput" value="processed-image.png" aria-label="Image name">
+                </div>
+                <div class="card-actions">
+                    <button class="btn-download" id="downloadBtn" aria-label="Download processed image">
+                        <i class="fas fa-download"></i> Download PNG
+                    </button>
+                    <button class="btn-share" id="shareBtn" aria-label="Share processed image">
+                        <i class="fas fa-share-alt"></i> Share
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - History -->
+        <div class="right-panel">
+            <div class="history-header">
+                <h3 class="section-title">
+                    <i class="fas fa-history"></i> History
+                </h3>
+                <button class="btn-clear-history" id="clearHistoryBtn" aria-label="Clear all history">
+                    Clear All
+                </button>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- History items will be dynamically added here -->
+                <div class="empty-history" id="emptyHistory">
+                    <i class="fas fa-clock"></i>
+                    <p>No processed images yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2023 Ayan Hacks. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Configuration
+        const REMOVE_BG_API_KEY = "4QMeBC36XhzJijLyiV3aFcrE";
+        const REMOVE_BG_API_URL = "https://api.remove.bg/v1.0/removebg";
+        const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB in bytes
+
+        // DOM Elements
+        const welcomeModal = document.getElementById('welcomeModal');
+        const mainContainer = document.getElementById('mainContainer');
+        const getStartBtn = document.getElementById('getStartBtn');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const originalPlaceholder = document.getElementById('originalPlaceholder');
+        const originalPreview = document.getElementById('originalPreview');
+        const processedPlaceholder = document.getElementById('processedPlaceholder');
+        const processedPreview = document.getElementById('processedPreview');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const processedCard = document.getElementById('processedCard');
+        const imageNameInput = document.getElementById('imageNameInput');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const historyList = document.getElementById('historyList');
+        const emptyHistory = document.getElementById('emptyHistory');
+        const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+        const toastContainer = document.getElementById('toastContainer');
+
+        // State variables
+        let currentProcessedImage = null;
+        let currentOriginalImage = null;
+        let history = JSON.parse(localStorage.getItem('ayanHacksHistory')) || [];
+
+        // Initialize the app
+        function init() {
+            // Show welcome modal on page load
+            welcomeModal.style.display = 'flex';
+            
+            // Set up event listeners
+            getStartBtn.addEventListener('click', startApp);
+            uploadBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileSelect);
+            downloadBtn.addEventListener('click', downloadImage);
+            shareBtn.addEventListener('click', shareImage);
+            clearHistoryBtn.addEventListener('click', clearHistory);
+            
+            // Drag and drop functionality
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, highlightUploadArea, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, unhighlightUploadArea, false);
+            });
+            
+            uploadArea.addEventListener('drop', handleDrop, false);
+            
+            // Load history from localStorage
+            renderHistory();
+            
+            // Accessibility: focus trap for modal
+            welcomeModal.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    startApp();
+                }
+            });
+        }
+
+        // Prevent default drag and drop behavior
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight upload area when dragging over
+        function highlightUploadArea() {
+            uploadArea.classList.add('dragover');
+        }
+
+        // Remove highlight from upload area
+        function unhighlightUploadArea() {
+            uploadArea.classList.remove('dragover');
+        }
+
+        // Handle dropped files
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        }
+
+        // Start the app (close welcome modal)
+        function startApp() {
+            welcomeModal.style.display = 'none';
+            mainContainer.style.display = 'flex';
+            
+            // Set focus to upload area for accessibility
+            uploadBtn.focus();
+        }
+
+        // Handle file selection via file input
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        // Process the selected file
+        function handleFile(file) {
+            // Check file size
+            if (file.size > MAX_FILE_SIZE) {
+                showToast('File size exceeds 15MB limit. Please choose a smaller image.', 'error');
+                return;
+            }
+            
+            // Check file type
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                showToast('Please select a valid image file (JPG, PNG, or WEBP).', 'error');
+                return;
+            }
+            
+            // Show original preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentOriginalImage = e.target.result;
+                originalPlaceholder.style.display = 'none';
+                originalPreview.src = currentOriginalImage;
+                originalPreview.style.display = 'block';
+                
+                // Show loading spinner and hide processed preview
+                loadingSpinner.style.display = 'flex';
+                processedPlaceholder.style.display = 'none';
+                processedPreview.style.display = 'none';
+                processedCard.style.display = 'none';
+                
+                // Send to remove.bg API
+                removeBackground(file);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Send image to remove.bg API
+        async function removeBackground(file) {
+            const formData = new FormData();
+            formData.append('image_file', file);
+            formData.append('size', 'auto');
+            
+            try {
+                const response = await fetch(REMOVE_BG_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'X-Api-Key': REMOVE_BG_API_KEY
+                    },
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+                
+                const blob = await response.blob();
+                const resultUrl = URL.createObjectURL(blob);
+                
+                // Show processed preview
+                loadingSpinner.style.display = 'none';
+                processedPreview.src = resultUrl;
+                processedPreview.style.display = 'block';
+                processedCard.style.display = 'block';
+                
+                // Set current processed image
+                currentProcessedImage = resultUrl;
+                
+                // Generate a default filename
+                const timestamp = new Date().getTime();
+                const fileName = file.name.replace(/\.[^/.]+$/, "") || "image";
+                imageNameInput.value = `${fileName}-bg-removed.png`;
+                
+                // Save to history
+                saveToHistory(file.name, resultUrl, currentOriginalImage);
+                
+                showToast('Background removed successfully!', 'success');
+            } catch (error) {
+                console.error('Error removing background:', error);
+                loadingSpinner.style.display = 'none';
+                processedPlaceholder.style.display = 'flex';
+                showToast('Failed to remove background. Please try again.', 'error');
+            }
+        }
+
+        // Save processed image to history
+        function saveToHistory(name, resultDataUrl, originalDataUrl) {
+            const historyItem = {
+                id: Date.now(),
+                name: name,
+                resultDataUrl: resultDataUrl,
+                originalDataUrl: originalDataUrl,
+                timestamp: new Date().toISOString(),
+                displayTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            
+            history.unshift(historyItem);
+            
+            // Keep only last 20 items
+            if (history.length > 20) {
+                history = history.slice(0, 20);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('ayanHacksHistory', JSON.stringify(history));
+            
+            // Update history display
+            renderHistory();
+        }
+
+        // Render history list
+        function renderHistory() {
+            if (history.length === 0) {
+                emptyHistory.style.display = 'block';
+                return;
+            }
+            
+            emptyHistory.style.display = 'none';
+            historyList.innerHTML = '';
+            
+            history.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.tabIndex = 0;
+                historyItem.setAttribute('role', 'button');
+                historyItem.setAttribute('aria-label', `Open ${item.name} from history`);
+                
+                historyItem.innerHTML = `
+                    <img src="${item.resultDataUrl}" alt="${item.name}" class="history-thumb">
+                    <div class="history-info">
+                        <div class="history-name">${item.name.length > 20 ? item.name.substring(0, 20) + '...' : item.name}</div>
+                        <div class="history-time">${item.displayTime}</div>
+                    </div>
+                    <div class="history-actions">
+                        <button class="history-btn" aria-label="Download ${item.name}" data-id="${item.id}">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="history-btn" aria-label="Delete ${item.name}" data-id="${item.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                // Add event listener to open history item
+                historyItem.addEventListener('click', (e) => {
+                    if (!e.target.closest('.history-btn')) {
+                        openHistoryItem(item);
+                    }
+                });
+                
+                // Add event listener for Enter key
+                historyItem.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.target.closest('.history-btn')) {
+                        openHistoryItem(item);
+                    }
+                });
+                
+                // Add event listeners for buttons
+                const downloadBtn = historyItem.querySelector('.history-btn:nth-child(1)');
+                const deleteBtn = historyItem.querySelector('.history-btn:nth-child(2)');
+                
+                downloadBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    downloadHistoryItem(item);
+                });
+                
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteHistoryItem(item.id);
+                });
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        // Open history item in preview
+        function openHistoryItem(item) {
+            originalPlaceholder.style.display = 'none';
+            originalPreview.src = item.originalDataUrl;
+            originalPreview.style.display = 'block';
+            
+            processedPlaceholder.style.display = 'none';
+            processedPreview.src = item.resultDataUrl;
+            processedPreview.style.display = 'block';
+            
+            processedCard.style.display = 'block';
+            
+            currentProcessedImage = item.resultDataUrl;
+            currentOriginalImage = item.originalDataUrl;
+            
+            const fileName = item.name.replace(/\.[^/.]+$/, "") || "image";
+            imageNameInput.value = `${fileName}-bg-removed.png`;
+            
+            showToast('History item loaded', 'info');
+        }
+
+        // Download history item
+        function downloadHistoryItem(item) {
+            const link = document.createElement('a');
+            link.href = item.resultDataUrl;
+            link.download = `${item.name.replace(/\.[^/.]+$/, "")}-bg-removed.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('Image downloaded from history', 'success');
+        }
+
+        // Delete history item
+        function deleteHistoryItem(id) {
+            history = history.filter(item => item.id !== id);
+            localStorage.setItem('ayanHacksHistory', JSON.stringify(history));
+            renderHistory();
+            
+            showToast('Item removed from history', 'info');
+        }
+
+        // Clear all history
+        function clearHistory() {
+            if (history.length === 0) {
+                showToast('History is already empty', 'info');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to clear all history? This action cannot be undone.')) {
+                history = [];
+                localStorage.removeItem('ayanHacksHistory');
+                renderHistory();
+                
+                showToast('All history cleared', 'info');
+            }
+        }
+
+        // Download current processed image
+        function downloadImage() {
+            if (!currentProcessedImage) {
+                showToast('No image to download', 'error');
+                return;
+            }
+            
+            const link = document.createElement('a');
+            link.href = currentProcessedImage;
+            link.download = imageNameInput.value;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('Image downloaded successfully', 'success');
+        }
+
+        // Share current processed image
+        function shareImage() {
+            if (!currentProcessedImage) {
+                showToast('No image to share', 'error');
+                return;
+            }
+            
+            // Convert data URL to blob
+            fetch(currentProcessedImage)
+                .then(res => res.blob())
+                .then(blob => {
+                    const file = new File([blob], imageNameInput.value, { type: 'image/png' });
+                    
+                    if (navigator.share && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            files: [file],
+                            title: 'Background Removed Image',
+                            text: 'Check out this image with background removed using Ayan Hacks!'
+                        });
+                    } else {
+                        // Fallback: Copy to clipboard or show download
+                        const link = document.createElement('a');
+                        link.href = currentProcessedImage;
+                        link.download = imageNameInput.value;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        showToast('Image ready for sharing (downloaded)', 'info');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sharing image:', error);
+                    showToast('Failed to share image', 'error');
+                });
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.setAttribute('aria-live', 'assertive');
+            
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            
+            toast.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <div class="toast-message">${message}</div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            // Remove toast after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 500);
+            }, 5000);
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
